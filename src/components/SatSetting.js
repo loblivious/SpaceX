@@ -71,7 +71,7 @@ class SatSetting extends Component {
           </div>
           <div className="setting-list">
             <div className="list-item">
-              <label>Elevation(meters): </label>
+              <label>Altitude (meters): </label>
               <InputNumber
                 min={0}
                 max={90}
