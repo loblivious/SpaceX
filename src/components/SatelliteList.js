@@ -59,7 +59,7 @@ class SatelliteList extends Component {
                 ]}
               >
                 <List.Item.Meta
-                  avatar={<Avatar size={50} src={Satellite} />}
+                  avatar={<Avatar size={45} src={Satellite} />}
                   title={<p>{item.satname}</p>}
                   description={`Launch Date: ${item.launchDate}`}
                 />

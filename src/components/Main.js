@@ -105,7 +105,7 @@ class Main extends Component {
         });
       })
       .catch((error) => {
-        console.log('err in fetch satellite -> ', error);
+        console.log('err in fetch satellite: ', error);
         this.setState({
           loadingSatellites: false,
         });
