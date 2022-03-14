@@ -8,7 +8,7 @@ class SatSetting extends Component {
       observerLat: 0,
       observerLong: 0,
       observerAlt: 0,
-      radius: 90,
+      radius: 0,
     };
   }
 
