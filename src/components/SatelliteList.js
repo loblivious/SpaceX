@@ -6,7 +6,7 @@ class SatelliteList extends Component {
   constructor() {
     super();
     this.state = {
-      duration: 0,
+      duration: 60,
     };
   }
 
@@ -25,20 +25,31 @@ class SatelliteList extends Component {
     const satList = this.props.satInfo ? this.props.satInfo.above : [];
     return (
       <div className="sat-list-box">
-        <Button
-          className="sat-list-btn"
-          size="large"
-          disabled={this.props.disableTrack}
-          onClick={() => this.props.trackOnclick(this.state.duration)}
-        >
-          Track on the map
-        </Button>
+        {!this.props.isDrawing ? (
+          <Button
+            className="sat-list-btn sat-list-track-btn"
+            size="large"
+            disabled={this.props.disableTrack}
+            onClick={() => this.props.trackOnclick(this.state.duration)}
+          >
+            Track on the map
+          </Button>
+        ) : (
+          <Button
+            className="sat-list-btn sat-list-stop-btn"
+            size="large"
+            onClick={() => this.props.stopOnclick()}
+          >
+            Stop tracking
+          </Button>
+        )}
+
         <div className="list-item">
-          <label>Track Duration </label>
+          <label>Track Duration (seconds): </label>
           <InputNumber
             min={0}
             max={90}
-            defaultValue={0}
+            value={this.state.duration}
             style={{ margin: '0 2px' }}
             onChange={this.onChangeDuration}
           />

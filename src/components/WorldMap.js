@@ -50,28 +50,26 @@ class WorldMap extends Component {
     land.forEach((ele) => {
       // draw the countries
       context.fillStyle = '#B3DDEF';
-      context.strokeStyle = '#000';
-      context.globalAlpha = 0.7;
+      context.strokeStyle = '#001f3f';
+      context.globalAlpha = 0.9;
       context.beginPath();
       path(ele);
       context.fill();
       context.stroke();
-    });
 
-    for (let temp = 1; temp < 15; temp++) {
       // draw the graticule
       context.strokeStyle = 'rgba(220, 220, 220, 0.5)';
       context.beginPath();
       path(graticule());
-      context.lineWidth = 0.5;
+      context.lineWidth = 0.1;
       context.stroke();
 
       // draw the graticule outline
       context.beginPath();
-      context.lineWidth = 0.7;
+      context.lineWidth = 0.5;
       path(graticule.outline());
       context.stroke();
-    }
+    });
   }
 
   render() {
@@ -79,8 +77,7 @@ class WorldMap extends Component {
       <div className="map-box">
         <canvas className="map" ref={this.refMap} />
         <canvas className="track" ref={this.props.refTrack} />
-        <div className="hint"></div>
-        {this.props.loading ? <Spin tip="Loading..." /> : <></>}
+        {this.props.loading ? (<Spin tip="Loading..." />) : <></>}
       </div>
     );
   }

@@ -8,11 +8,19 @@
 
 .sat-list-btn {
   text-transform: none;
-  padding: 10px 36px;
   margin-bottom: 10px;
-  background-color: #2bb673;
   font-size: 1em;
   color: #fff;
+}
+
+.sat-list-track-btn {
+  padding: 10px 36px;
+  background-color: #2bb673;
+}
+
+.sat-list-stop-btn {
+  padding: 10px 49px;
+  background-color: #df3636;
 }
 
 .sat-list {

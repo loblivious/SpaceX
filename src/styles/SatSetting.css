@@ -18,8 +18,7 @@
   display: flex;
 }
 
-.list-item label,
-.altitude-setting span {
+.list-item label, .altitude-setting span {
   font-size: 1em;
 }
 

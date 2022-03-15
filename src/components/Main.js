@@ -30,20 +30,25 @@ class Main extends Component {
     this.refTrack = React.createRef();
   }
 
+  stopOnclick = () => {
+    clearInterval(this.state.timer);
+    this.setState({ isDrawing: false });
+  };
+
   trackOnClick = (duration) => {
     const { observerLat, observerLong, observerAlt } = this.state.setting;
-    const endTime = duration * 60;
+    const seconds = duration * 60;
     this.setState({
       loadingSatPositions: true,
       duration: duration,
     });
     const urls = this.state.selected.map((sat) => {
       const { satid } = sat;
-      const url = `${SATELLITE_POSITION_URL}/${satid}/${observerLat}/${observerLong}/${observerAlt}/${endTime}/&apiKey=${SAT_API_KEY}`;
+      const url = `${SATELLITE_POSITION_URL}/${satid}/${observerLat}/${observerLong}/${observerAlt}/${seconds}/&apiKey=${SAT_API_KEY}`;
       return Axios.get(url);
     });
 
-    Axios.all(urls)
+    Promise.all(urls)
       .then(
         Axios.spread((...args) => {
           return args.map((item) => item.data);
@@ -52,18 +57,21 @@ class Main extends Component {
       .then((res) => {
         this.setState({
           satPositions: res,
-          loadingSatPositions: false,
         });
         this.track();
       })
       .catch((e) => {
-        console.log('err in fetch satellite position -> ', e.message);
+        console.log('err in fetch satellite position: ', e.message);
+      })
+      .finally(() => {
+        this.setState({
+          loadingSatPositions: false,
+        });
       });
   };
 
   addOrRemove = (item, status) => {
     let { selected: list } = this.state;
-    // let list = this.state.selected;
     const found = list.some((entry) => entry.satid === item.satid);
 
     if (status && !found) {
@@ -71,9 +79,7 @@ class Main extends Component {
     }
 
     if (!status && found) {
-      list = list.filter((entry) => {
-        return entry.satid !== item.satid;
-      });
+      list = list.filter((entry) => entry.satid !== item.satid);
     }
 
     console.log(list);
@@ -84,7 +90,7 @@ class Main extends Component {
 
   showNearbySatellite = (setting) => {
     this.setState({
-      setting: setting,
+      setting,
     });
     this.fetchSatellite(setting);
   };
@@ -113,40 +119,34 @@ class Main extends Component {
   };
 
   track = () => {
-    const data = this.state.satPositions;
+    this.setState({ isDrawing: true });
 
-    const len = data[0].positions.length;
-    const startTime = this.state.duration;
+    const { satPositions } = this.state;
+
+    const len = satPositions[0].positions.length;
 
     const canvas2 = d3Select(this.refTrack.current)
       .attr('width', width)
       .attr('height', height);
     const context2 = canvas2.node().getContext('2d');
 
-    let now = new Date();
-    let i = startTime;
-
+    let i = 0;
     let timer = setInterval(() => {
-      let timePassed = Date.now() - now;
-      if (i === startTime) {
-        now.setSeconds(now.getSeconds() + startTime * 60);
+      this.setState({ timer });
+      if (i >= len) {
+        clearInterval(timer);
+        this.setState({ isDrawing: false });
+        return;
       }
 
-      let time = new Date(now.getTime() + 60 * timePassed);
+      let time = new Date(1000 * satPositions[0].positions[i].timestamp);
       context2.clearRect(0, 0, width, height);
       context2.font = 'bold 14px sans-serif';
       context2.fillStyle = '#333';
       context2.textAlign = 'center';
       context2.fillText(d3TimeFormat(time), width / 2, 10);
 
-      if (i >= len) {
-        clearInterval(timer);
-        this.setState({ isDrawing: false });
-        const oHint = document.getElementsByClassName('hint')[0];
-        oHint.innerHTML = '';
-        return;
-      }
-      data.forEach((sat) => {
+      satPositions.forEach((sat) => {
         const { info, positions } = sat;
         this.drawSat(info, positions[i], context2);
       });
@@ -187,6 +187,8 @@ class Main extends Component {
             onSelectionChange={this.addOrRemove}
             disableTrack={this.state.selected.length === 0}
             trackOnclick={this.trackOnClick}
+            isDrawing={this.state.isDrawing}
+            stopOnclick={this.stopOnclick}
           />
         </div>
         <div className="right-side">

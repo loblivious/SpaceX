@@ -84,7 +84,7 @@ class SatSetting extends Component {
           <p className="setting-label">Restrictions</p>
           <div className="setting-list">
             <div className="list-item">
-              <label>Search Radius </label>
+              <label>Search Radius: </label>
               <InputNumber
                 min={0}
                 max={90}
