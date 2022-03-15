@@ -6,4 +6,6 @@ It requires you to enter the latitude, longitude, altitude, and the radius to se
 
 The map will show the predicted path for a satellite (one second in real life is one minute for the satellite).
 
+Remember to disable Cross-Origin Restrictions in your browser.
+
 Play it on the [GitHub page](https://loblivious.github.io/spacex/)!
